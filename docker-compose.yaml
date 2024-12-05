@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  kong:
+    image: kong:latest
+    ports:
+      - "8000:8000"
+      - "8443:8443"
+      - "8001:8001"
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /kong/kong.yaml
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+    volumes:
+      - ./kongconfig/kong.yaml:/kong/kong.yaml # Map the local file to the container
+    depends_on:
+      - auth-service
+    networks:
+      - kong-careermatch-net
+
+  auth-service:
+    image: hobingantuk/auth-services:v1
+    ports:
+      - "8081:8080"
+    networks:
+      - kong-careermatch-net
+    environment:
+      - MongoDbSettings__ConnectionString=${AUTHSERVICE_CONNECTIONSTRING}
+      - MongoDbSettings__DatabaseName=${AUTH_DBNAME}
+      - JwtSettings__SecretKey=${AUTH_JWT_SECRET}
+      - JwtSettings__Issuer=AuthService
+      - JwtSettings__Audience=AuthServiceAudience
+      - JwtSettings__AccessTokenExpiryMinutes=10
+      - JwtSettings__RefreshTokenExpiryDays=7
+
+networks:
+  kong-careermatch-net:
+    driver: bridge
