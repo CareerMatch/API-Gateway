@@ -2,7 +2,7 @@ _format_version: "3.0"
 
 services:
   - name: auth-service
-    url: http://auth-service:8080
+    url: http://auth-service:443
     routes:
       - name: auth-route
         paths:
@@ -12,7 +12,7 @@ services:
           - POST
 
   - name: joblisting-service
-    url: http://joblisting-service:8080
+    url: http://joblisting-service:443
     routes:
       - name: joblisting-route
         paths:
