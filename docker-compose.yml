@@ -29,7 +29,7 @@ services:
     networks:
       - kong-careermatch-net
     environment:
-      - MongoDbSettings__ConnectionString=mongodb+srv:/${MONGOATLAS_USERNAME}:${MONGOATLAS_PASSWORD}@auth-service.b0hx6.mongodb.net/?retryWrites=true&w=majority&appName=auth-service
+      - MongoDbSettings__ConnectionString=mongodb+srv://${MONGOATLAS_USERNAME}:${MONGOATLAS_PASSWORD}@auth-service.b0hx6.mongodb.net/?retryWrites=true&w=majority&appName=auth-service
       - MongoDbSettings__DatabaseName=${AUTH_DBNAME}
       - JwtSettings__SecretKey=${AUTH_JWT_SECRET}
       - JwtSettings__Issuer=AuthService
