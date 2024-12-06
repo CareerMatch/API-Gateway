@@ -29,14 +29,24 @@ services:
     networks:
       - kong-careermatch-net
     environment:
-      - MongoDbSettings__ConnectionString=${AUTHSERVICE_CONNECTIONSTRING}
+      - MongoDbSettings__ConnectionString=mongodb+srv:/${MONGOATLAS_USERNAME}:${MONGOATLAS_PASSWORD}@auth-service.b0hx6.mongodb.net/?retryWrites=true&w=majority&appName=auth-service
       - MongoDbSettings__DatabaseName=${AUTH_DBNAME}
       - JwtSettings__SecretKey=${AUTH_JWT_SECRET}
       - JwtSettings__Issuer=AuthService
       - JwtSettings__Audience=AuthServiceAudience
       - JwtSettings__AccessTokenExpiryMinutes=10
       - JwtSettings__RefreshTokenExpiryDays=7
-
+  
+  joblisting-service:
+    image: hobingantuk/joblisting:v1
+    ports:
+      - "8082:8080"
+    networks:
+      - kong-careermatch-net
+    environment:
+      - MongoDbSettings__ConnectionString=mongodb+srv://${MONGOATLAS_USERNAME}:${MONGOATLAS_PASSWORD}@joblistingcluster.7xz3a.mongodb.net/?retryWrites=true&w=majority&appName=JobListingCluster
+      - MongoDbSettings__DatabaseName=${JOBLISTING_DBNAME}
+    
 networks:
   kong-careermatch-net:
     driver: bridge

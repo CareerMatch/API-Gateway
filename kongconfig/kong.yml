@@ -10,4 +10,16 @@ services:
         strip_path: false
         methods:
           - POST
-        
+
+  - name: joblisting-service
+    url: http://joblisting-service:8080
+    routes:
+      - name: joblisting-route
+        paths:
+          - /api/joblisting
+        strip_path: false
+        methods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
