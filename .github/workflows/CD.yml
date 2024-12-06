@@ -23,10 +23,11 @@ jobs:
 
       - name: Deploy Kong Gateway
         env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          AUTHSERVICE_CONNECTIONSTRING: ${{ secrets.AUTHSERVICE_CONNECTIONSTRING }}
+          MONGOATLAS_USERNAME: ${{ secrets.MONGOATLAS_USERNAME }}
+          MONGOATLAS_PASSWORD: ${{ secrets.MONGOATLAS_PASSWORD }}
           AUTH_DBNAME: ${{ secrets.AUTH_DBNAME }}
           AUTH_JWT_SECRET: ${{ secrets.AUTH_JWT_SECRET }}
+          JOBLISTING_DBNAME: ${{ secrets.JOBLISTING_DBNAME }}
         run: |
+          docker-compose -f docker-compose.yml down
           docker-compose -f docker-compose.yml up -d
