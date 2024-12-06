@@ -1,4 +1,3 @@
-# .github/workflows/cd.yml
 name: CD Workflow
 
 on:
@@ -14,21 +13,21 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      # Step 1: Check out the code
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Set Environment Variables for Service
-        env:
-          SERVICE_FOLDER: "ServiceTemplate"
-          IMAGE_TAG: "servicetemplate:v1"
+      - name: Pull Required Images
         run: |
-          echo "SERVICE_FOLDER=${SERVICE_FOLDER}" >> $GITHUB_ENV
-          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
+          docker-compose -f docker-compose.yml pull
 
-      - name: Build and Push Docker Image
+      - name: Deploy Kong Gateway
         env:
-          APP_UID: 1000
+          MONGOATLAS_USERNAME: ${{ secrets.MONGOATLAS_USERNAME }}
+          MONGOATLAS_PASSWORD: ${{ secrets.MONGOATLAS_PASSWORD }}
+          AUTH_DBNAME: ${{ secrets.AUTH_DBNAME }}
+          AUTH_JWT_SECRET: ${{ secrets.AUTH_JWT_SECRET }}
+          JOBLISTING_DBNAME: ${{ secrets.JOBLISTING_DBNAME }}
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_TAG }} ./${{ env.SERVICE_FOLDER }}
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_TAG }}
+          docker-compose -f docker-compose.yml down
+          docker-compose -f docker-compose.yml up -d

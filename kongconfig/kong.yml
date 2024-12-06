@@ -1,0 +1,25 @@
+_format_version: "3.0"
+
+services:
+  - name: auth-service
+    url: http://auth-service:8080
+    routes:
+      - name: auth-route
+        paths:
+          - /api/auth
+        strip_path: false
+        methods:
+          - POST
+
+  - name: joblisting-service
+    url: http://joblisting-service:8080
+    routes:
+      - name: joblisting-route
+        paths:
+          - /api/JobListings
+        strip_path: false
+        methods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
