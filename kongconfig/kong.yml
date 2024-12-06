@@ -16,7 +16,7 @@ services:
     routes:
       - name: joblisting-route
         paths:
-          - /api/joblisting
+          - /api/JobListings
         strip_path: false
         methods:
           - GET
