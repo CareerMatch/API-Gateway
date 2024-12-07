@@ -1,17 +1,21 @@
-# Base image for Kong
+# Use the official Kong Gateway image
 FROM kong:latest
 
-# Set the necessary environment variables
+# Copy the Kong configuration file to the container
+COPY kongconfig/kong.yml /usr/local/kong/declarative/kong.yml
+
+# Expose the required Kong ports
+EXPOSE 8000 8443 8001
+
+# Set environment variables for declarative mode
 ENV KONG_DATABASE=off
-ENV KONG_DECLARATIVE_CONFIG=/kong/kong.yml
-ENV KONG_PROXY_LISTEN=0.0.0.0:${PORT:-8000}
+ENV KONG_DECLARATIVE_CONFIG=/usr/local/kong/declarative/kong.yml
+ENV KONG_PROXY_ACCESS_LOG=/dev/stdout
+ENV KONG_ADMIN_ACCESS_LOG=/dev/stdout
+ENV KONG_PROXY_ERROR_LOG=/dev/stderr
+ENV KONG_ADMIN_ERROR_LOG=/dev/stderr
 ENV KONG_ADMIN_LISTEN=0.0.0.0:8001
+ENV KONG_PROXY_LISTEN="0.0.0.0:8000,0.0.0.0:8443 ssl"  
 
-# Copy the declarative configuration
-COPY kongconfig/kong.yml /kong/kong.yml
-
-# Expose the required ports
-EXPOSE 8000 8001
-
-# Command to start Kong
-CMD ["kong", "start"]
+# Start Kong
+CMD ["kong", "docker-start"]
